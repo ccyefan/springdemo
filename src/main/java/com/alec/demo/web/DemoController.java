@@ -16,7 +16,7 @@ public class DemoController {
 	@RequestMapping("/savedemo")
 	public String savedemo(){
 		Demo demo = new Demo();
-		demo.setName("Alec");
+		demo.setFirstname("Alec");
 		demoService.save(demo);
 		return "ok.DemoController.save";
 	}

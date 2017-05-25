@@ -15,5 +15,6 @@ public class DemoService {
 	@Transactional
 	public void save(Demo demo){
 		demoRepository.save(demo);
+		
 	}
 }
