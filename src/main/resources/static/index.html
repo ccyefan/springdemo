@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>index.html</title>
+    
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="keywords" content="keyword1,keyword2,keyword3">
+    <meta http-equiv="description" content="this is my page">
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    
+    <!--<link rel="stylesheet" type="text/css" href="./styles.css">-->
+	<!-- DataTables CSS -->
+	<link rel="stylesheet" type="text/css" href="DataTables-1.10.15/media/css/jquery.dataTables.css">
+	
+<!-- 	<link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/uikit/2.24.3/css/uikit.min.css">
+	<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.15/css/dataTables.uikit.min.css">
+ -->
+	<!-- jQuery -->
+	<script type="text/javascript" charset="utf8" src="DataTables-1.10.15/media/js/jquery.js"></script>
+	<!-- DataTables -->
+	<script type="text/javascript" charset="utf8" src="DataTables-1.10.15/media/js/jquery.dataTables.js"></script>
+<!-- 	<script type="text/javascript" language="javascript" src="//code.jquery.com/jquery-1.12.4.js"></script>
+	<script type="text/javascript" language="javascript" src="https://cdn.datatables.net/1.10.15/js/jquery.dataTables.min.js"></script>
+	<script type="text/javascript" language="javascript" src="https://cdn.datatables.net/1.10.15/js/dataTables.uikit.min.js"></script>
+ -->
+   </head>
+  
+  <body>	
+    This is my HTML page. <br>
+    <table class="display" cellspacing="0" width="100%">
+    <!-- <table class="uk-table uk-table-hover uk-table-striped" cellspacing="0" width="100%"> -->
+    	<thead>
+    		<tr>
+    			<td>PkId</td>
+    			<td>firstname</td>
+    			<td>lastname</td>
+    		</tr>
+    	</thead>
+    	<tbody>
+    	</tbody>
+    </table>
+  <script type="text/javascript">
+ var oTable;
+ $(document).ready( function () {
+  oTable = $("table").DataTable({
+  	"scrollX": true,
+  	"serverSide": true,
+  	"searching":false,
+  	"ajax":function(data, callback, settings){
+    	data.size = data.length;
+    	data.page = data.start/data.length;
+		var index = data.order[0].column;
+		var colval = (index==0)?'id':data.columns[index].data;
+		data.sort = colval+','+data.order[0].dir;
+		$.ajax({
+			url:"/form/demo",
+			data:data,
+			type:"get",
+			success:function(result){
+				var returnData = {};
+				returnData.data = result._embedded.demo;
+				returnData.recordsTotal = result.page.totalElements;
+				returnData.recordsFiltered = result.page.totalElements;
+				callback(returnData);
+			}
+		});
+  	},
+  	"columns":[{data:"pkId"},{data:"firstname"},{data:"lastname"}]
+  });
+});
+  </script>
+  </body>
+</html>
