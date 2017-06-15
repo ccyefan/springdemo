@@ -18,6 +18,6 @@ public class DemoController {
 		Demo demo = new Demo();
 		demo.setFirstname("Alec");
 		demoService.save(demo);
-		return "ok.DemoController.save";
+		return "ok.DemoController.save.s";
 	}
 }

@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>index.html</title>
+	
+    <meta http-equiv="keywords" content="keyword1,keyword2,keyword3">
+    <meta http-equiv="description" content="this is my page">
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    
+    <!--<link rel="stylesheet" type="text/css" href="./styles.css">-->
+
+  </head>
+  
+  <body>
+    This is my HTML page. <br>
+    <table border="1">
+    	<thead>
+    		<tr>
+    			<td>fields1</td>
+    			<td>fields2</td>
+    			<td colspan="2">操作</td>
+    		</tr>
+    	</thead>
+    	<tbody>
+    	</tbody>
+    </table>
+    <form></form>
+    <label>fields1:</label><input id="firstname"/><label>fields2:</label><input id="lastname" />
+    <button onclick="add()">add</button>
+    
+  </body>
+  <!-- <script src="https://code.jquery.com/jquery-1.12.4.js" type="text/javascript"></script> -->
+  <script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
+  <script type="text/javascript">
+  	$.ajax({
+  		"url":"/form/demo",
+  		"type":"GET",
+  		"contentType":"application/json",
+  		"success":function(result){
+  			var beans = result._embedded.demo;
+  			for(i=0;i<beans.length;i++){
+	  			$("tbody").append("<tr><td>"+beans[i].firstname+"</td><td>"+beans[i].lastname+"</td><td><a href='#' rel="+beans[i]._links.self.href+"r onclick=del('"+beans[i]._links.self.href+"')>删除</a></td><td><a href='#' onclick=update('"+beans[i]._links.self.href+"','"+beans[i].firstname+"','"+beans[i].lastname+"')>修改</a></td></tr>")
+  			}
+  		}
+  	});
+  	var isUpdate = false;
+  	var vurl = null;
+  	function add(){
+  		console.log(vurl);
+  		console.log(isUpdate);
+  		var url = "/form/demo";
+  		var type = "POST";
+  		if(isUpdate){
+  			url = vurl;
+  			type = "PATCH";
+  		}
+  		var data = {};
+  		data.firstname = $("#firstname").val();
+  		data.lastname = $("#lastname").val();
+  		$.ajax({
+	  		"url":url,
+	  		"type":type,
+	  		"contentType":"application/json",
+	  		"dataType":"json",
+	  		"data":JSON.stringify(data),
+	  		"success":function(result){
+	  			if(result!=null){
+	  				location.reload();
+	  			}
+	  		}
+  		});
+  	}
+  	function del(url){
+  		console.log(url);
+  		$.ajax({
+	  		"url":url,
+	  		"type":"DELETE",	
+	  		"success":function(){
+	  			location.reload();
+	  		}
+  		});
+  	}
+  	function update(url,firstname,lastname){
+  		console.log(url);
+  		console.log(firstname);
+  		console.log(lastname);
+  		$("#firstname").val(firstname);
+  		$("#lastname").val(lastname);
+  		isUpdate = true;
+  		vurl = url;
+  		$("button").html("update");
+  	}
+  </script>
+</html>
